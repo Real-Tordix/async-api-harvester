@@ -1,12 +1,15 @@
 # async-api-harvester
 
-![CI](https://github.com/shayanghad0/async-api-harvester/actions/workflows/python-tests.yml/badge.svg)
-
 A lightweight async Python client for harvesting API data with concurrency limits, retries, rate limiting, and structured output.
 
 ## Project status
 
-This project is currently set up as a small, testable async API harvester with a CLI, Python API, and CI validation pipeline.
+This project is focused on being a clean, testable async API fetcher with:
+
+- a terminal-first CLI
+- a PyQt5 desktop UI
+- a reusable Python API
+- a small, maintainable CI flow
 
 ## Features
 
@@ -17,12 +20,16 @@ This project is currently set up as a small, testable async API harvester with a
 - Request timeout handling
 - Immutable result objects
 - CLI and Python API usage
-- Simple JSON or console output
+- PyQt5 GUI mode
+- Rich terminal output
+- JSON or table-style result output
 
 ## Requirements
 
 - Python 3.11+
 - `httpx`
+- `PyQt5` for GUI mode
+- `rich` for the terminal UI
 
 ## Installation
 
@@ -45,18 +52,18 @@ Install dependencies:
 pip install -e .
 ```
 
-Or, if you want the minimal runtime setup:
-
-```bash
-pip install httpx
-```
-
 ## Quick start
 
-Run the CLI with a few URLs:
+Terminal mode:
 
 ```bash
 python main.py https://jsonplaceholder.typicode.com/posts/1 https://jsonplaceholder.typicode.com/posts/2
+```
+
+GUI mode:
+
+```bash
+python Gui.py
 ```
 
 Read URLs from a file:
@@ -130,40 +137,29 @@ asyncio.run(main())
 python main.py --json https://jsonplaceholder.typicode.com/posts/1
 ```
 
-## Terminal mode
+## Examples
 
-Run the terminal-based version with Rich output:
+See the [examples folder](examples/README.md) for:
 
-```bash
-python main.py https://jsonplaceholder.typicode.com/posts/1
-```
+- terminal usage
+- GUI launch
+- file-based harvesting
 
-## GUI mode
+## Roadmap
 
-Run the PyQt5 desktop interface:
+Planned improvements for the project:
 
-```bash
-python Gui.py
-```
-
-The GUI includes a styled dashboard panel, custom CSS theming, and a simple URL harvest workflow.
+- export to JSON, CSV, and NDJSON
+- domain-aware throttling
+- better retry-by-status logic
+- per-host rate limits
+- progress bar and summary reporting
+- optional task queue and persistence layer
 
 ## Documentation
 
 - [How to use](HOW_TO_USE.md)
-- CI checks run with GitHub Actions for the Python test suite
-
-## Project goals
-
-This repository demonstrates practical Python patterns including:
-
-- async I/O
-- concurrency control
-- structured logging
-- retry/backoff strategies
-- type-safe dataclasses
-- CLI design
-- testing with async code
+- [Examples](examples/README.md)
 
 ## License
 
