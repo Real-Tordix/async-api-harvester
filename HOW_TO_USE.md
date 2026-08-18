@@ -161,3 +161,8 @@ python main.py --timeout 30 https://example.com
 ```text
 200 | https://jsonplaceholder.typicode.com/posts/1 | sunt aut facere repellat provident occaecati excepturi optio reprehenderit
 ```
+
+## 10) Repository hygiene
+
+Local environment files such as `.venv/`, `__pycache__/`, `.pytest_cache/`, `.ruff_cache/`, and temporary editor files are ignored by Git through the project `.gitignore`.
+This keeps the repo clean while you work locally.

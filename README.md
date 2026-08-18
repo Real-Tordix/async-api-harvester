@@ -124,6 +124,11 @@ asyncio.run(main())
 python main.py --json https://jsonplaceholder.typicode.com/posts/1
 ```
 
+## Documentation
+
+- [How to use](HOW_TO_USE.md)
+- CI checks run with GitHub Actions for the Python test suite
+
 ## Project goals
 
 This repository demonstrates practical Python patterns including:
