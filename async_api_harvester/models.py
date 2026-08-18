@@ -20,7 +20,9 @@ class FetchResult:
         title = "N/A"
         if isinstance(self.data, dict):
             title = str(self.data.get("title") or self.data.get("name") or "N/A")
-        elif isinstance(self.data, list) and self.data and isinstance(self.data[0], dict):
+        elif (
+            isinstance(self.data, list) and self.data and isinstance(self.data[0], dict)
+        ):
             title = str(self.data[0].get("title") or self.data[0].get("name") or "N/A")
 
         return f"{self.status_code} | {self.url} | {title}"

@@ -130,6 +130,24 @@ asyncio.run(main())
 python main.py --json https://jsonplaceholder.typicode.com/posts/1
 ```
 
+## Terminal mode
+
+Run the terminal-based version with Rich output:
+
+```bash
+python main.py https://jsonplaceholder.typicode.com/posts/1
+```
+
+## GUI mode
+
+Run the PyQt5 desktop interface:
+
+```bash
+python Gui.py
+```
+
+The GUI includes a styled dashboard panel, custom CSS theming, and a simple URL harvest workflow.
+
 ## Documentation
 
 - [How to use](HOW_TO_USE.md)

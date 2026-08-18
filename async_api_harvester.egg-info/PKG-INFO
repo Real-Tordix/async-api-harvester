@@ -6,13 +6,22 @@ Requires-Python: >=3.11
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: httpx<1.0,>=0.27
+Requires-Dist: rich<14.0,>=13.0
+Requires-Dist: PyQt5<6.0,>=5.15.10
 Provides-Extra: dev
 Requires-Dist: pytest<9.0,>=8.0; extra == "dev"
+Requires-Dist: pytest-asyncio<1.0,>=0.23; extra == "dev"
 Dynamic: license-file
 
 # async-api-harvester
 
+![CI](https://github.com/shayanghad0/async-api-harvester/actions/workflows/python-tests.yml/badge.svg)
+
 A lightweight async Python client for harvesting API data with concurrency limits, retries, rate limiting, and structured output.
+
+## Project status
+
+This project is currently set up as a small, testable async API harvester with a CLI, Python API, and CI validation pipeline.
 
 ## Features
 
@@ -135,6 +144,11 @@ asyncio.run(main())
 ```bash
 python main.py --json https://jsonplaceholder.typicode.com/posts/1
 ```
+
+## Documentation
+
+- [How to use](HOW_TO_USE.md)
+- CI checks run with GitHub Actions for the Python test suite
 
 ## Project goals
 
