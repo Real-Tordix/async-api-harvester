@@ -1,0 +1,2 @@
+[console_scripts]
+async-api-harvester = async_api_harvester.cli:main

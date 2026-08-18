@@ -1,0 +1,5 @@
+[
+  "tests/test_harvester.py::test_collect_filters_invalid_urls",
+  "tests/test_harvester.py::test_fetch_retries_failed_request",
+  "tests/test_harvester.py::test_fetch_success"
+]

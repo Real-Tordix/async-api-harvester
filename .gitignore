@@ -1,3 +1,29 @@
+# Local environment / editor artifacts
+.venv/
+venv/
+env/
+ENV/
+.env
+.env.*
+.vscode/
+.idea/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+coverage.xml
+.coverage
+htmlcov/
+*.log
+*.tmp
+*.bak
+*.swp
+*.pyc
+*.pyo
+__pycache__/
+.temp/
+tempCodeRunnerFile.py
+
+# Existing project ignores
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
