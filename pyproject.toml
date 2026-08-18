@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=83.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -16,15 +16,15 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "pytest>=8.0,<9.0",
-  "pytest-asyncio>=0.23,<1.0",
+  "pytest>=9.0.3,<10.0",
+  "pytest-asyncio>=0.26,<1.0",
 ]
 
 [project.scripts]
 async-api-harvester = "async_api_harvester.cli:main"
 
 [tool.pytest.ini_options]
-pythonpath = ["."]
+pythonpath = [""]
 testpaths = ["tests"]
 
 [tool.setuptools]

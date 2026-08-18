@@ -5,7 +5,8 @@ import logging
 import random
 import time
 from collections.abc import Iterable
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+from typing import Any
 from urllib.parse import urlparse
 
 import httpx
@@ -22,9 +23,23 @@ class APIHarvester:
     def __init__(
         self,
         config: HarvesterConfig | None = None,
-        **kwargs: object,
+        **kwargs: Any,
     ) -> None:
-        self.config = config or HarvesterConfig(**kwargs)
+        if config is not None:
+            self.config = config
+        else:
+            self.config = HarvesterConfig(
+                concurrency=int(kwargs.get("concurrency", 10)),
+                timeout=float(kwargs.get("timeout", 10.0)),
+                retries=int(kwargs.get("retries", 3)),
+                backoff_base=float(kwargs.get("backoff_base", 1.0)),
+                max_requests_per_second=(
+                    None
+                    if kwargs.get("max_requests_per_second") in (None, "")
+                    else float(kwargs.get("max_requests_per_second", 0.0) or 0.0)
+                ),
+                user_agent=str(kwargs.get("user_agent", "async-api-harvester/1.0")),
+            )
         self.semaphore = asyncio.Semaphore(self.config.concurrency)
         self._request_lock = asyncio.Lock()
         self._last_request_time = 0.0
@@ -51,14 +66,19 @@ class APIHarvester:
 
                     payload = response.json()
                     elapsed_ms = (time.perf_counter() - start) * 1000
-                    logger.info("Fetched %s [%s] in %.1f ms", normalized_url, response.status_code, elapsed_ms)
+                    logger.info(
+                        "Fetched %s [%s] in %.1f ms",
+                        normalized_url,
+                        response.status_code,
+                        elapsed_ms,
+                    )
                     return FetchResult(
                         url=normalized_url,
                         status_code=response.status_code,
                         data=payload,
                         attempts=attempt,
                         latency_ms=elapsed_ms,
-                        timestamp=datetime.now(timezone.utc).isoformat(),
+                        timestamp=datetime.now(UTC).isoformat(),
                     )
                 except (httpx.HTTPError, ValueError) as exc:
                     last_error = exc
@@ -70,11 +90,17 @@ class APIHarvester:
                         exc,
                     )
                     if attempt <= self.config.retries:
-                        delay = self.config.backoff_base * (2 ** (attempt - 1)) + random.uniform(0, 0.25)
+                        delay = self.config.backoff_base * (
+                            2 ** (attempt - 1)
+                        ) + random.uniform(0, 0.25)
                         await asyncio.sleep(delay)
 
             elapsed_ms = (time.perf_counter() - start) * 1000
-            logger.error("Giving up on %s after %d attempts", normalized_url, self.config.retries + 1)
+            logger.error(
+                "Giving up on %s after %d attempts",
+                normalized_url,
+                self.config.retries + 1,
+            )
             return FetchResult(
                 url=normalized_url,
                 status_code=response.status_code if response is not None else 0,
@@ -82,7 +108,7 @@ class APIHarvester:
                 attempts=self.config.retries + 1,
                 latency_ms=elapsed_ms,
                 error=str(last_error) if last_error else "unknown error",
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
             )
 
     async def collect(
@@ -91,7 +117,9 @@ class APIHarvester:
         *,
         client: httpx.AsyncClient | None = None,
     ) -> list[FetchResult]:
-        unique_urls = list(dict.fromkeys(str(url).strip() for url in urls if str(url).strip()))
+        unique_urls = list(
+            dict.fromkeys(str(url).strip() for url in urls if str(url).strip())
+        )
         valid_urls: list[str] = []
         for url in unique_urls:
             try:

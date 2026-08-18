@@ -7,7 +7,7 @@ import logging
 from dataclasses import asdict
 from pathlib import Path
 
-from .config import HarvesterConfig, load_config
+from .config import load_config
 from .harvester import APIHarvester
 
 logger = logging.getLogger(__name__)
@@ -16,26 +16,38 @@ logger = logging.getLogger(__name__)
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Async API harvester")
     parser.add_argument("urls", nargs="*", help="URLs to fetch")
-    parser.add_argument("--input-file", type=Path, help="Path to a file containing one URL per line")
+    parser.add_argument(
+        "--input-file", type=Path, help="Path to a file containing one URL per line"
+    )
     parser.add_argument("--concurrency", type=int, help="Maximum concurrent requests")
     parser.add_argument("--timeout", type=float, help="Per-request timeout in seconds")
     parser.add_argument("--retries", type=int, help="Number of retry attempts")
-    parser.add_argument("--backoff-base", type=float, help="Backoff base delay in seconds")
-    parser.add_argument("--max-rps", type=float, help="Optional global requests per second limit")
+    parser.add_argument(
+        "--backoff-base", type=float, help="Backoff base delay in seconds"
+    )
+    parser.add_argument(
+        "--max-rps", type=float, help="Optional global requests per second limit"
+    )
     parser.add_argument("--user-agent", help="Custom User-Agent header")
     parser.add_argument("--json", action="store_true", help="Output results as JSON")
     return parser
 
 
 def read_urls_from_file(path: Path) -> list[str]:
-    return [line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    return [
+        line.strip()
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s"
+    )
 
     urls = list(args.urls)
     if args.input_file:

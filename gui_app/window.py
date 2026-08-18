@@ -43,10 +43,12 @@ class ApiHarvestWindow(QMainWindow):
         root.addWidget(title)
 
         form = QFormLayout()
-        form.setLabelAlignment(Qt.AlignRight)
+        form.setLabelAlignment(Qt.AlignmentFlag.AlignRight)
 
         self.url_input = QLineEdit()
-        self.url_input.setPlaceholderText("https://jsonplaceholder.typicode.com/posts/1")
+        self.url_input.setPlaceholderText(
+            "https://jsonplaceholder.typicode.com/posts/1"
+        )
         form.addRow("URL", self.url_input)
 
         self.mode_box = QComboBox()
@@ -102,7 +104,7 @@ class ApiHarvestWindow(QMainWindow):
         self.log_output.append("Starting harvest...")
         try:
             results = asyncio.run(harvester.collect(target_urls))
-        except Exception as exc:  # pragma: no cover - GUI safety path
+        except (RuntimeError, ValueError, OSError, TimeoutError, TypeError) as exc:
             self.log_output.append(f"Harvest failed: {exc}")
             return
 

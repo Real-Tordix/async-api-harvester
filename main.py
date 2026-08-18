@@ -23,13 +23,21 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-async def harvest(urls: list[str], concurrency: int, timeout: float, retries: int, max_rps: float | None) -> list[object]:
-    config = load_config({
-        "concurrency": concurrency,
-        "timeout": timeout,
-        "retries": retries,
-        "max_requests_per_second": max_rps,
-    })
+async def harvest(
+    urls: list[str],
+    concurrency: int,
+    timeout: float,
+    retries: int,
+    max_rps: float | None,
+) -> list[object]:
+    config = load_config(
+        {
+            "concurrency": concurrency,
+            "timeout": timeout,
+            "retries": retries,
+            "max_requests_per_second": max_rps,
+        }
+    )
     harvester = APIHarvester(config=config)
     return await harvester.collect(urls)
 
@@ -42,15 +50,19 @@ def main() -> None:
         "https://jsonplaceholder.typicode.com/posts/3",
     ]
 
-    console.print(Panel.fit("[bold cyan]Async API Harvester[/bold cyan]", border_style="cyan"))
+    console.print(
+        Panel.fit("[bold cyan]Async API Harvester[/bold cyan]", border_style="cyan")
+    )
 
-    results = asyncio.run(harvest(
-        urls,
-        concurrency=args.concurrency,
-        timeout=args.timeout,
-        retries=args.retries,
-        max_rps=args.max_rps,
-    ))
+    results = asyncio.run(
+        harvest(
+            urls,
+            concurrency=args.concurrency,
+            timeout=args.timeout,
+            retries=args.retries,
+            max_rps=args.max_rps,
+        )
+    )
 
     table = Table(title="Fetched results", show_lines=True)
     table.add_column("Status", style="green")

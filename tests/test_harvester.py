@@ -64,4 +64,7 @@ async def test_collect_filters_invalid_urls() -> None:
         )
 
     assert len(results) == 2
-    assert {item.url for item in results} == {"https://example.com/a", "https://example.com/b"}
+    assert {item.url for item in results} == {
+        "https://example.com/a",
+        "https://example.com/b",
+    }
