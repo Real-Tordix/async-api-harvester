@@ -1,6 +1,12 @@
 # async-api-harvester
 
+![CI](https://github.com/shayanghad0/async-api-harvester/actions/workflows/python-tests.yml/badge.svg)
+
 A lightweight async Python client for harvesting API data with concurrency limits, retries, rate limiting, and structured output.
+
+## Project status
+
+This project is currently set up as a small, testable async API harvester with a CLI, Python API, and CI validation pipeline.
 
 ## Features
 
