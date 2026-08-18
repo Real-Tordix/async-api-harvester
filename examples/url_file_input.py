@@ -8,7 +8,11 @@ from async_api_harvester.harvester import APIHarvester
 
 
 async def main(path: str) -> None:
-    urls = [line.strip() for line in Path(path).read_text(encoding="utf-8").splitlines() if line.strip()]
+    urls = [
+        line.strip()
+        for line in Path(path).read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
     config = HarvesterConfig(concurrency=5, timeout=10.0, retries=3)
     harvester = APIHarvester(config=config)
 
