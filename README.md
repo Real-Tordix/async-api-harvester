@@ -1,18 +1,17 @@
 # async-api-harvester
 
-High-performance async API data collector with concurrency control,
-retries, timeouts, and structured logging.
+A lightweight async Python client for harvesting API data with concurrency limits, retries, rate limiting, and structured output.
 
 ## Features
 
-- Async HTTP requests with `httpx`
-- Concurrent request handling
-- Configurable concurrency limits
-- Automatic retries with exponential backoff
-- Request timeouts
-- Structured logging
-- Typed Python code
+- Async HTTP requests using `httpx`
+- Configurable concurrency control with `asyncio.Semaphore`
+- Retry support with exponential backoff
+- Optional request-rate limit (`--max-rps`)
+- Request timeout handling
 - Immutable result objects
+- CLI and Python API usage
+- Simple JSON or console output
 
 ## Requirements
 
@@ -22,73 +21,121 @@ retries, timeouts, and structured logging.
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/async-api-harvester.git
+git clone https://github.com/shayanghad0/async-api-harvester.git
 cd async-api-harvester
-
 python -m venv .venv
 source .venv/bin/activate
 ```
 
-Windows:
+On Windows PowerShell:
 
-```
-.venv\Scripts\activate
+```powershell
+.venv\Scripts\Activate.ps1
 ```
 
 Install dependencies:
 
+```bash
+pip install -e .
 ```
+
+Or, if you want the minimal runtime setup:
+
+```bash
 pip install httpx
 ```
 
-Usage
-```
-python main.py
-```
+## Quick start
 
-Example output:
+Run the CLI with a few URLs:
 
-```
-200 | https://jsonplaceholder.typicode.com/posts/1 | sunt aut facere...
-200 | https://jsonplaceholder.typicode.com/posts/2 | qui est esse...
-200 | https://jsonplaceholder.typicode.com/posts/3 | ea molestias...
+```bash
+python main.py https://jsonplaceholder.typicode.com/posts/1 https://jsonplaceholder.typicode.com/posts/2
 ```
 
-Configuration
+Read URLs from a file:
 
-The harvester can be configured with:
-
-```
-APIHarvester(
-    concurrency=10,
-    timeout=10.0,
-    retries=3,
-)
+```bash
+python main.py --input-file urls.txt
 ```
 
-Project Goals
+Example `urls.txt`:
 
-This project demonstrates practical Python concepts including:
+```text
+https://jsonplaceholder.typicode.com/posts/1
+https://jsonplaceholder.typicode.com/posts/2
+https://jsonplaceholder.typicode.com/posts/3
+```
 
-asyncio
+## Configuration
 
-async HTTP clients
+You can override runtime values with CLI arguments or environment variables.
 
-concurrency control
+Environment variables:
 
-error handling
+```bash
+export API_HARVESTER_CONCURRENCY=10
+export API_HARVESTER_TIMEOUT=5.0
+export API_HARVESTER_RETRIES=3
+export API_HARVESTER_BACKOFF_BASE=1.0
+export API_HARVESTER_MAX_RPS=5
+export API_HARVESTER_USER_AGENT="my-client/1.0"
+```
 
-retry strategies
+CLI arguments:
 
-type hints
+```bash
+python main.py \
+  --concurrency 10 \
+  --timeout 5.0 \
+  --retries 3 \
+  --backoff-base 1.0 \
+  --max-rps 5 \
+  https://jsonplaceholder.typicode.com/posts/1
+```
 
-dataclasses
+## Python usage
 
-logging
+```python
+import asyncio
+
+from async_api_harvester.config import HarvesterConfig
+from async_api_harvester.harvester import APIHarvester
 
 
-##
+async def main() -> None:
+    config = HarvesterConfig(concurrency=5, timeout=5.0, retries=3)
+    harvester = APIHarvester(config=config)
+    results = await harvester.collect([
+        "https://jsonplaceholder.typicode.com/posts/1",
+        "https://jsonplaceholder.typicode.com/posts/2",
+    ])
 
-License
+    for result in results:
+        print(result.summary())
+
+
+asyncio.run(main())
+```
+
+## JSON output
+
+```bash
+python main.py --json https://jsonplaceholder.typicode.com/posts/1
+```
+
+## Project goals
+
+This repository demonstrates practical Python patterns including:
+
+- async I/O
+- concurrency control
+- structured logging
+- retry/backoff strategies
+- type-safe dataclasses
+- CLI design
+- testing with async code
+
+## License
 
 MIT
